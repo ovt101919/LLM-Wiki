@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>計算機概論：數位邏輯入門教學簡報</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; }
+        body { background: #0f172a; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
+        .progress-bar { height: 6px; background: #1e293b; width: 100%; }
+        .progress-fill { height: 100%; background: #38bdf8; width: 0%; transition: width 0.3s ease; }
+        .slide-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 1.5rem; }
+        .slide-card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; max-width: 920px; width: 100%; padding: 2.2rem 2.8rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
+        .badge { display: inline-block; background: #0284c7; color: #e0f2fe; padding: 0.3rem 0.8rem; border-radius: 999px; font-size: 0.85rem; margin-bottom: 0.8rem; }
+        h1 { font-size: 2rem; color: #38bdf8; margin-bottom: 0.5rem; }
+        .subtitle { font-size: 1.15rem; color: #94a3b8; margin-bottom: 1.5rem; border-left: 4px solid #38bdf8; padding-left: 1rem; }
+        ul { list-style: none; margin-bottom: 1.5rem; }
+        li { font-size: 1.08rem; line-height: 1.65; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative; }
+        li::before { content: "▸"; color: #38bdf8; position: absolute; left: 0; font-weight: bold; }
+        .tip-box { background: #0f172a; border-left: 4px solid #f59e0b; padding: 0.9rem 1.2rem; border-radius: 8px; color: #fde68a; font-size: 0.98rem; }
+        .note-box { margin-top: 0.9rem; background: #020617; border: 1px solid #334155; padding: 0.9rem 1.2rem; border-radius: 8px; color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; }
+        .controls { display: flex; justify-content: space-between; align-items: center; padding: 1rem 3rem; background: #020617; border-top: 1px solid #1e293b; }
+        button { background: #38bdf8; color: #0f172a; border: none; padding: 0.6rem 1.4rem; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+        button:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
+        .page-info { color: #94a3b8; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+    <div class="slide-container">
+        <div class="slide-card" id="slide-content"></div>
+    </div>
+    <div class="controls">
+        <button id="prev-btn" onclick="changeSlide(-1)">← 上一頁</button>
+        <span class="page-info" id="page-info"></span>
+        <button id="next-btn" onclick="changeSlide(1)">下一頁 →</button>
+    </div>
+    <script>
+        const slides = [{"page": 1, "title": "計算機概論：數位邏輯與資料表示法入門", "subtitle": "就像把複雜的語言翻譯成只有「開」和「關」兩種狀態的電燈開關，讓電腦能聽懂人話。", "source_wiki": "index.md", "points": ["【為什麼需要它】電腦內部沒有「文字」或「圖片」，只有電流的通斷（0 和 1）。數位邏輯就是教我們如何把現實世界的資訊（如數字、文字）轉換成電腦能處理的 0/1 代碼，並進行運算。", "【怎麼運作】核心是「二進位」與「布林邏輯」。想像成一個只有兩個按鈕的遙控器：AND 閘是「兩個都按才亮」，OR 閘是「按任意一個就亮」，NOT 閘是「反轉狀態」。", "【實際算算看】假設你要用二進位表示數字 5。因為 5 = 4 + 1，對應二進位權重（8, 4, 2, 1），所以 5 的二進位是 0101。這就像用 4 個燈泡表示數字：第 2 個燈（權重 4）和第 4 個燈（權重 1）亮，其他滅。"], "tip": "初學者常混淆「十進位」和「二進位」的位權。記住：二進位每一位的權重是 2 的次方（1, 2, 4, 8...），而不是 10 的次方。", "must_remember": ["電腦只認 0 和 1，所有資料最終都要轉成二進位。", "數位邏輯是用「開關」組合來實現計算，就像用燈泡的亮滅來表示數字。"], "speaker_note": "大家好，歡迎來到計算機概論的第一課。今天我們不談複雜的程式碼，而是從最底層開始：電腦到底怎麼「思考」？想像一下，如果電腦是一個只懂「開」和「關」的機器人，我們怎麼告訴它「請加 5」？答案就是數位邏輯。我們會用生活化的比喻，比如燈泡開關，來解釋 0 和 1 如何組合出所有資訊。請準備好筆記，我們馬上開始！"}, {"page": 2, "title": "進位制與補數系統：1's 與 2's 補數", "subtitle": "像「按鍵反轉」加「找零錢」：把 0 變 1、1 變 0，再從右邊加 1 找零", "source_wiki": "01_補數.md", "points": ["【為什麼需要它】電腦裡沒有「減法鍵」，只有加法。用補數可以把「減去一個數」變成「加上它的補數」，讓硬體設計更簡單。", "【怎麼運作】1's 補數就是「全部反轉」（0變1，1變0）；2's 補數則是「先反轉，再從最右邊加1」，就像找零錢一樣，遇到0就停，遇到1就繼續傳進位。", "【實際算算看】以 4 位元 '0111' 為例：1's 補數是 '1000'（全反轉）；2's 補數是 '1001'（1000 + 1，最右邊0變1，進位停止）。"], "tip": "初學者最容易搞混的是：2's 補數不是直接對原數加1，而是「先做1's補數（反轉），再加1」。順序錯了結果就全錯！", "must_remember": ["1's 補數 = 全部反轉（0↔1）", "2's 補數 = 1's 補數 + 1（從右邊加，遇0停，遇1傳進位）"], "speaker_note": "各位同學，想像你在玩一個「燈泡遊戲」：有一排4個燈泡，開著是1，關著是0。1's 補數就是「把所有燈泡狀態反轉」——開的關掉，關的打開。2's 補數則是在反轉後，從最右邊的燈泡開始「加1」：如果那個燈泡是關的（0），就打開它（變1），遊戲結束；如果是開的（1），就關掉它（變0），並把「進位」傳給左邊的燈泡，重複這個過程。例如 '0111' 反轉成 '1000'，再加1：最右邊是0，直接變1，得到 '1001'。這就是2's補數！記住：先反轉，再加1，順序不能錯。"}, {"page": 3, "title": "資料傳輸守護者：奇偶校驗與漢明碼 (Hamming Code)", "subtitle": "就像快遞包裹上的「防拆封條」與「定位標籤」，讓電腦能自動發現並修正傳輸中翻轉的位元。", "source_wiki": "02_漢明碼.md", "points": ["【為什麼需要它】資料在傳輸時偶爾會因為干擾而「翻臉」（0變1或1變0）。普通的奇偶校驗只能發現有錯，但不知道錯在哪裡；漢明碼則像是有「定位系統」，不僅能發現錯誤，還能精確指出是哪一位元出錯，並自動修正它。", "【怎麼運作】核心口訣是「2的冪次方位置放校驗位」。我們先決定需要幾個校驗位（r），公式是 $2^r \\ge m + r + 1$（m是原始資料長度）。接著把校驗位放在第1、2、4、8...個位置，其餘位置放資料。每個校驗位負責檢查特定範圍的位元，確保該範圍內1的個數符合規則（如偶校驗）。", "【實際算算看】假設原始資料是 4 位元（m=4）。我們試算需要幾個校驗位 r：若 r=2，$2^2=4$，而 $m+r+1 = 4+2+1=7$，因為 $4 < 7$，所以 2 個不夠。若 r=3，$2^3=8$，而 $m+r+1 = 4+3+1=8$，因為 $8 \\ge 8$，成立！所以 4 位元資料需要 3 個校驗位，總共傳輸 7 位元。"], "tip": "初學者最容易搞混的是「位置編號」是從 1 開始，不是從 0 開始！而且校驗位只放在 1, 2, 4, 8... 這些 2 的冪次方位置，其他位置才是放你的真實資料。", "must_remember": ["漢明碼不僅能「偵測」錯誤，還能「自動更正」單一位元錯誤。", "校驗位必須放在 2 的冪次方位置（1, 2, 4, 8...），這是定位的關鍵。"], "speaker_note": "各位同學，想像一下你寄出一個重要包裹，裡面裝了 4 個小盒子（代表 4 位元資料）。為了確保包裹沒被調包或損壞，我們不能只貼一張「防拆封條」（普通奇偶校驗），因為如果封條破了，你只知道包裹被動過，但不知道哪個盒子壞了。\n\n漢明碼就像是在包裹的特定位置（第1、2、4個盒子）貼上特殊的「定位標籤」（校驗位）。這些標籤會根據周圍盒子的狀態來決定自己該貼紅色（1）還是藍色（0）。當包裹送到時，接收方重新檢查這些標籤。如果標籤狀態不對，透過標籤的組合，我們能精確算出是第幾個盒子出了問題，然後直接把它翻轉回來修正。\n\n這裡有一個關鍵的數學規則：我們需要多少個標籤（校驗位 r）？公式是 $2^r \\ge m + r + 1$。這裡 m 是你的資料長度。為什麼要加 1？因為要預留一個「無錯誤」的狀態（全0）。\n\n讓我們手算一下：假設你有 4 位元資料（m=4）。如果只用 2 個標籤（r=2），$2^2=4$，但 $4+2+1=7$，4 小於 7，不夠用。如果改用 3 個標籤（r=3），$2^3=8$，而 $4+3+1=8$，8 大於等於 8，剛好夠用！所以 4 位元資料需要 3 個校驗位，總共傳輸 7 位元。記住，位置是從 1 開始數的，校驗位放在 1、2、4 這些位置，資料放在 3、5、6、7 這些位置。"}, {"page": 4, "title": "數位電路積木：基本邏輯閘與萬用閘", "subtitle": "就像拼圖積木，AND/OR 是基本形狀，NAND/NOR 是萬能積木", "source_wiki": "03_邏輯閘.md", "points": ["【為什麼需要它】電腦裡的所有複雜運算，其實都是把簡單的「開關」規則（邏輯閘）像積木一樣拼起來。AND 像「兩把鑰匙都要轉動門才開」，OR 像「任一鑰匙都能開門」，而 NAND/NOR 則是「萬能積木」，單獨用它們就能拼出任何複雜的電路。", "【怎麼運作】記住口訣：AND 是「全對才對」（全1才出1），OR 是「有對就對」（有1就出1），NOT 是「反著來」（1變0，0變1）。NAND 就是 AND 後面接個 NOT，NOR 就是 OR 後面接個 NOT。", "【實際算算看】假設輸入 A=1, B=0：\n1. AND (1·0) = 0（因為不是全1）\n2. OR (1+0) = 1（因為有1）\n3. NAND (¬(1·0)) = ¬0 = 1（AND結果取反）\n4. XOR (1⊕0) = 1（因為輸入不同）"], "tip": "初學者最容易搞混的是 NAND 和 NOR 的輸出。NAND 只有在「全1」時才輸出 0，其他時候都是 1；NOR 只有在「全0」時才輸出 1，其他時候都是 0。別把「全1」和「全0」搞反了！", "must_remember": ["NAND 和 NOR 是「萬用閘」，單獨用它們就能做出任何邏輯電路。", "AND 要「全1」才出1，OR 要「有1」就出1，NOT 就是「反過來」。"]}, {"page": 5, "title": "布林代數標準式：積之和 (SOP) 與和之積 (POS)", "subtitle": "就像「點菜」與「退貨」：SOP 是列出所有你「想要」的組合，POS 是列出所有你「不想要」的組合", "source_wiki": "04_SOP_POS.md", "points": ["【為什麼需要它】在設計電路時，我們需要一種標準化的方式來描述邏輯功能。SOP（積之和）專注於輸出為 1 的情況，POS（和之積）專注於輸出為 0 的情況，兩者都能完整描述同一個邏輯功能，但結構不同，適合不同的電路實作需求。", "【怎麼運作】\n1. SOP 口訣：「看 1 寫 AND，最後 OR 起來」。找出真值表中輸出為 1 的行，每行變數若為 1 寫原形（如 A），若為 0 寫補（如 A'），將該行所有變數 AND 起來成為一個「乘項」，最後把所有乘項 OR 起來。\n2. POS 口訣：「看 0 寫 OR，最後 AND 起來」。找出真值表中輸出為 0 的行，每行變數若為 1 寫補（如 A'），若為 0 寫原形（如 A），將該行所有變數 OR 起來成為一個「和項」，最後把所有和項 AND 起來。", "【實際算算看】假設有一個 2 變數邏輯 F(A,B)，真值表如下：\nA=0,B=0 → F=0\nA=0,B=1 → F=1\nA=1,B=0 → F=1\nA=1,B=1 → F=0\n\n求 SOP：\n輸出為 1 的行是 (0,1) 和 (1,0)。\n(0,1) → A=0 寫 A'，B=1 寫 B → A'·B\n(1,0) → A=1 寫 A，B=0 寫 B' → A·B'\nSOP = A'·B + A·B'\n\n求 POS：\n輸出為 0 的行是 (0,0) 和 (1,1)。\n(0,0) → A=0 寫 A，B=0 寫 B → (A+B)\n(1,1) → A=1 寫 A'，B=1 寫 B' → (A'+B')\nPOS = (A+B)·(A'+B')"], "tip": "初學者最容易搞混的是「補相」的寫法：SOP 中 0 要寫補（A'），1 寫原形（A）；但 POS 中剛好相反，0 寫原形（A），1 要寫補（A'）。記得 SOP 是「正向思考」（我要什麼），POS 是「反向思考」（我不要什麼），所以變數的表示方式會互為補集。", "must_remember": ["SOP 看輸出為 1 的行，變數 1 寫原形、0 寫補，最後用 OR 連接。", "POS 看輸出為 0 的行，變數 1 寫補、0 寫原形，最後用 AND 連接。", "SOP 和 POS 是同一個邏輯功能的兩種標準表示法，可互相轉換。"], "speaker_note": "各位同學，歡迎來到第 5 頁。這頁我們要講的是布林代數的兩種標準形式：SOP 和 POS。很多人一開始覺得這兩個名字很嚇人，其實它們只是兩種不同的「寫法」而已。\n\n想像一下你去餐廳點餐。SOP 就像是你直接列出「我要吃什麼」：我要牛肉麵、我要蛋餅、我要奶茶。每一道菜是一個「乘項」（AND），然後你用「和」（OR）把它们加起來，這就是 SOP。\n\n而 POS 呢？就像是你列出「我不要什麼」：我不要辣、我不要香菜、我不要冰。每一項「不要」是一個「和項」（OR），然後你用「積」（AND）把它们乘起來，這就是 POS。\n\n注意一個關鍵點：在 SOP 中，如果某個變數是 0，我們寫它的補（A'）；但在 POS 中，如果某個變數是 0，我們寫原形（A）。這是最容易搞混的地方，請特別留意。\n\n我們用一個簡單的 2 變數例子來練習。假設 F(A,B) 在 (0,1) 和 (1,0) 時輸出為 1，其他情況輸出為 0。\n\n求 SOP：我們只看輸出為 1 的行。(0,1) 對應 A'·B，(1,0) 對應 A·B'，所以 SOP = A'·B + A·B'。\n\n求 POS：我們只看輸出為 0 的行。(0,0) 對應 (A+B)，(1,1) 對應 (A'+B')，所以 POS = (A+B)·(A'+B')。\n\n大家發現了嗎？SOP 和 POS 描述的是同一個邏輯功能，只是角度不同。在實際電路設計中，SOP 通常更容易實作，因為它對應 AND-OR 結構；而 POS 在某些情況下可以減少門的數量。\n\n最後提醒：SOP 是「正向思考」，POS 是「反向思考」。記住這個比喻，你就不會搞混了。"}, {"page": 6, "title": "化繁為簡的利器：卡諾圖 (K-Map) 化簡", "subtitle": "就像玩「連連看」消除相同元素，把複雜的邏輯公式變成最簡單的幾項相加", "source_wiki": "05_卡諾圖.md", "points": ["【為什麼需要它】布林代數化簡就像解超難的數學題，容易算錯且費時。卡諾圖把真值表變成一張地圖，讓你用眼睛「看」出哪些情況是相同的，直接圈起來就能得到最簡公式，省去大量運算。", "【怎麼運作】1. 畫出對應變數數量的格子（如3變數是2x4）。2. 把真值表中為1的位置填進格子。3. 圈出相鄰的1（可以是2個、4個、8個...，必須是2的次方，且可以環繞邊緣相連）。4. 每個圈代表一個簡化項：圈內「不變」的變數保留，「變化」的變數丟掉。", "【實際算算看】假設 F(A,B,C) 在輸入 001, 011, 110, 111 時輸出為1。在卡諾圖上，001和011相鄰，它們的A都是0，C都是1，只有B在變，所以簡化為 A'C；110和111相鄰，它們的A都是1，B都是1，只有C在變，所以簡化為 AB。最終結果就是 F = A'C + AB。"], "tip": "圈的時候，格子必須是矩形（長方形或正方形），不能圈成L型或T型！另外，左邊和右邊、上邊和下邊是相連的（像地圖一樣可以繞過去），別漏掉了邊緣的相鄰關係。", "must_remember": ["圈的大小必須是 2 的次方（2, 4, 8...），且要盡量圈大。", "圈內「不變」的變數才寫進公式，「變化」的變數直接丟掉。"], "speaker_note": "各位同學，想像一下你在玩一個消除遊戲。如果我們用傳統方法簡化邏輯，就像是在做一道很長的代數題，很容易算錯。但卡諾圖就像把這些數字擺在一個網格裡，你只需要用眼睛找出哪些格子是「長得一樣」的（也就是變數值相同的），然後用筆圈起來。圈得越大，代表能消除的變數越多，公式就越簡單。記住，圈的時候要像玩連連看一樣，相鄰的才能連，而且左右上下是可以繞過去的。只要記住「不變的留下，變化的丟掉」，你就能輕鬆得到最簡公式。"}, {"page": 7, "title": "全章重點總結：數位邏輯的「必吃名產」", "subtitle": "就像旅行必吃的地道小吃，這三個概念是理解電腦大腦的基礎", "source_wiki": "index.md", "points": ["【為什麼需要它】電腦只認得 0 和 1，但我們需要處理負數、邏輯判斷和錯誤修正。這三個核心概念（補數、邏輯閘、漢明碼）分別解決了「怎麼算負數」、「怎麼做判斷」和「怎麼防錯」的問題。", "【怎麼運作】口訣：負數用「反轉加一」（2's 補數），判斷用「與或非」（邏輯閘），防錯用「奇偶校驗」（漢明碼）。", "【實際算算看】假設你要用 4 位元表示 -3：\n1. 先寫 3 的二進位：0011\n2. 反轉每一位（1's 補數）：1100\n3. 再加 1（2's 補數）：1101\n所以 -3 在電腦裡就是 1101。"], "tip": "初學者常混淆 1's 補數和 2's 補數。記住：1's 補數只是「反轉」，2's 補數是「反轉後再加 1」。電腦實際運算幾乎都使用 2's 補數，因為它讓加減法統一，不需要區正負號。", "must_remember": ["2's 補數是電腦處理負數的標準方式：反轉所有位元，再加 1。", "邏輯閘（AND/OR/NOT）是建構所有複雜電路的最小單元，就像積木一樣。", "漢明碼透過多餘的校驗位，讓電腦能自動發現並修正單一位元的錯誤。"], "speaker_note": "各位同學，歡迎來到本課程的最後一頁。我們已經走過了數位邏輯的基礎旅程。現在，請想像你正在進行一場旅行，這三個概念就是這趟旅程中「必吃的地道名產」。\n\n第一道名產是「2's 補數」。為什麼它重要？因為電腦沒有減法鍵，它只有加法。為了讓電腦能算負數，我們用「反轉加一」的方法，把負數變成一個正數來表示。這樣，減法就可以轉化成加法，大大簡化了電路設計。請務必記住這個口訣：反轉，加一。\n\n第二道名產是「邏輯閘」。這是電腦大腦的積木。AND、OR、NOT，這些看似簡單的開關，組合起來就能實現從簡單計算到複雜AI的所有功能。理解它們，你就理解了電腦如何「思考」。\n\n第三道名產是「漢明碼」。在資料傳輸或儲存時，位元可能會因為干擾而翻轉。漢明碼就像給資料加上「保險」，透過多餘的校驗位，讓電腦能自動發現並修正錯誤，確保資料的準確性。\n\n最後，請帶走這三個核心觀念。其他細節忘了沒關係，但請記住：負數用2's補數，判斷用邏輯閘，防錯用漢明碼。這將是你未來學習更進階電腦科學的堅實基礎。謝謝大家！"}];
+        let current = 0;
+        function render() {
+            const s = slides[current];
+            document.getElementById('slide-content').innerHTML = `
+                <span class="badge">📚 知識來源：${s.source_wiki}</span>
+                <h1>${s.title}</h1>
+                <div class="subtitle">${s.subtitle}</div>
+                <ul>${(s.points || []).map(p => `<li>${p}</li>`).join('')}</ul>
+                <div class="tip-box">💡 <strong>初學者防呆提醒：</strong>${s.tip}</div>
+                <div class="note-box">
+                    🎒 <strong>其他忘了沒關係，這幾句一定要帶走：</strong>
+                    <ul style="margin-top: 0.5rem; margin-bottom: 0;">
+                        ${(s.must_remember || []).map(m => `<li style="font-size: 0.98rem; margin-bottom: 0.3rem;">${m}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            document.getElementById('page-info').innerText = `第 ${current + 1} 頁 / 共 ${slides.length} 頁（支援鍵盤 ← → 切換）`;
+            document.getElementById('progress').style.width = `${((current + 1) / slides.length) * 100}%`;
+            document.getElementById('prev-btn').disabled = current === 0;
+            document.getElementById('next-btn').disabled = current === slides.length - 1;
+        }
+        function changeSlide(dir) {
+            current = Math.max(0, Math.min(slides.length - 1, current + dir));
+            render();
+        }
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+        });
+        render();
+    </script>
+</body>
+</html>
